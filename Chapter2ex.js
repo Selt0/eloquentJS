@@ -49,3 +49,45 @@ for (let i = 1; i <= 100; i++) {
   if ( i % 5 == 0) output += 'Buzz';
   console.log(output || i);
 }
+
+//Chessboard
+/*
+Write a program that creates a string that represents an 8×8 grid, using newline characters to separate lines. At each position of the grid there is either a space or a "#" character. The characters should form a chessboard.
+
+Passing this string to console.log should show something like this:
+
+ # # # #
+# # # # 
+ # # # #
+# # # # 
+ # # # #
+# # # # 
+ # # # #
+# # # #
+
+When you have a program that generates this pattern, define a binding size = 8 and change the program so that it works for any size, outputting a grid of the given width and height.
+*/
+
+//hold grid size
+let grid = 8
+let chessboard = '';
+//loop to add new line
+  for (let i = 0; i < grid; i++){
+    //loop to add characters on line
+    for (let j = 0; j < grid; j++) {
+      //add ' '; if the sum of j + i is even (otherwise it would add '#' in the same place)
+      if ((j + i) % 2 == 0){
+        chessboard += ' ';
+      } else {
+        chessboard += '#';
+      } 
+    }
+    chessboard += '\n';
+  }
+  //print out chessboard
+  console.log(chessboard);
+
+
+
+
+//when characters = gird length, console log
