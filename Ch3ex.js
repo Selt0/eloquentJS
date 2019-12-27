@@ -38,6 +38,26 @@ console.log(isEven(-1));
 // → ??
 */
 
+function isEven(number) {
+    if (number == 0) {
+      return true;
+    } else if (number == 1) {
+      return false;
+    } else if (number < 0) {
+      return isEven(-n)
+    } else {
+      isEven(number - 2);
+    }
+  }
+
+//clever solution
+function isEven(n) {
+  if (n == 0) return true;
+  else if (n == 1) return false;
+  else if (n < 0) return isEven(-n);
+  else return isEven(n - 2);
+}
+
 //BEAN COUNTING
 /*
 You can get the Nth character, or letter, from a string by writing "string"[N]. The returned value will be a string containing only one character (for example, "b"). The first character has position 0, which causes the last one to be found at position string.length - 1. In other words, a two-character string has length 2, and its characters have positions 0 and 1.
