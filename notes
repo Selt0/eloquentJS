@@ -182,3 +182,44 @@ A function with a nice, obvious name like zeroPad makes it easier for someone wh
 *A useful principle is to not add cleverness unless you are absolutely sure you’re going to need it. It can be tempting to write general “frameworks” for every bit of functionality you come across. Resist that urge. You won’t get any real work done—you’ll just be writing code that you never use.*
 
 Separating the tasks your program performs into different functions is helpful. You won’t have to repeat yourself as much, and functions can help organize a program by grouping code into pieces that do specific things.
+
+//CHAPTER 4 - DATA STRUCTURES AND OBJECT ARRAYS
+
+When you compare objects with JavaScript’s == operator, it compares by identity: it will produce true only if both objects are precisely the same value. Comparing different objects will return false, even if they have identical properties.
+
+let object1 = {value: 10};
+let object2 = object1;
+let object3 = {value: 10};
+
+console.log(object1 == object2);
+// -> true
+console.log(object1 == object3);
+// -> false
+
+'object2' is set to equal 'object1', which gives it the same identity. 
+
+const binding to an object allows the values to change but the binding to the object itself cannot change
+
+const score = {visitors: 0, home: 0};
+score.visitors = 1;
+
+//error
+score = {visitor: 1, home: 1};
+- - - - - - - - - - - -  - - - -
+//empty array
+let jounral = []; 
+
+function addEntry(events, squirrel) {
+  journal.push({events, squirrel});
+}
+
+Note that the object added to the journal looks a little odd. Instead of declaring properties like events: events, it just gives a property name. This is shorthand that means the same thing—if a property name in brace notation isn’t followed by a value, its value is taken from the binding with the same name.
+
+//Array Loops
+for (let i = 0; i < journal.length; i++) {
+  let entry = journal[i];
+}
+//mordern loop in JS
+for (let entry of journal) {
+  console.log(`${entry.events.length} events.`)
+}
