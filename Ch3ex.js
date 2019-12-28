@@ -16,6 +16,12 @@ function min(a, b) {
   }
 }
 
+//Clever Solution
+function min(a, b) {
+  if (a < b) return a;
+  else return b;
+}
+
 //RECURSION
 /*
 We’ve seen that % (the remainder operator) can be used to test whether a number is even or odd by using % 2 to see whether it’s divisible by two. Here’s another way to define whether a positive whole number is even or odd:
@@ -35,8 +41,21 @@ console.log(isEven(50));
 console.log(isEven(75));
 // → false
 console.log(isEven(-1));
-// → ??
+// → Internal Error: too much recursion
 */
+
+function isEven(number) {
+  while (number >= 0){
+    if (number == 0){
+      return true;
+    } else if (number == 1) {
+      return false;
+    } else {
+      return isEven(number - 2);
+    }
+  }
+  return number * number;
+}
 
 //BEAN COUNTING
 /*
