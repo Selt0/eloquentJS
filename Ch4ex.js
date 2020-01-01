@@ -182,6 +182,30 @@ Use Object.keys to go over the properties. You need to test whether both objects
 Returning the correct value from the function is best done by immediately returning false when a mismatch is found and returning true at the end of the function.
 */
 
+function deepEqual(obj1, obj2) {
+  //compare values
+  if (obj1 === obj2) return true;
+
+  //test if they are real objects
+  if (obj1 == 'null' || typeof obj1 !== 'object' ||
+      obj2 == 'null' || typeof obj2 !== 'object') return false;
+  
+  //assign placeholder for keys array
+  let keys1 = Object.keys(obj1), keys2 = Object.keys(obj2);
+
+  //test if they share same length of keys
+  if (keys1.length !== keys2.length) return false;
+
+  //loop through each property
+  for (let key of keys1 ) {
+    //test if property is also in obj2 , if it is, run through 
+    // function again checking the values of property (recursive)
+    if (!keys2.includes(key) || !deepEqual(obj1[key], obj2[key])) return false;
+  }
+  //if all tests pass, return true
+  return true;
+}
+
 
 //clever solution
 function deepEqual(a, b) {
