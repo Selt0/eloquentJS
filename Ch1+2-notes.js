@@ -42,7 +42,7 @@ console.log(false ? 1: 2);
 console.log( null || 'user');
 // 'user'
 
-console.log( 'Agnes' || 'user');
+console.log( 'Agnes' || 'user'); // <- tests the length of the string
 // 'Agnes'
 
 //! 0, NaN, "" -> false
@@ -220,4 +220,3 @@ switch (prompt('What is the weather like?')) {
 //! The program will start executing at the label with the proper value(case) or at 'default' if no match.
 //! It will continue executing until it reaches a 'break' statement
 
-//!Empty string '' is false
