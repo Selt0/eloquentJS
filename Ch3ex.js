@@ -9,11 +9,7 @@ console.log(min(0, -10));
 */
 
 function min(a, b) {
-  if (a > b) {
-    return b;
-  } else {
-    return a;
-  }
+  return (a > b) ?  b :  a;
 }
 
 //Clever Solution
