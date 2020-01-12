@@ -234,3 +234,84 @@ console.log(Math.round(total / count));
 
 //!You can usually a afford the readable approach, but if you're processing huge arrays and doing so many times
 //the less abstract style might be worth the extra speed
+
+//function to figure out what script a piece of text is
+function characterScript(code) {
+  for (let script of SCRIPTS) {
+    if (script.ranges.some(([from, to]) => {
+      return code >= from && code < to;
+    })) {
+      return script;
+    }
+  }
+  return null;
+}
+
+console.log(characterScript(121));
+// -> {name: "Latin", …}
+
+//! some method is another higher-order function. 
+//It takes a test function and tells you whether that function returns true for any of the elements in an array
+
+
+//two emjoi characters, horse and shoe
+let horseShoe = '🐴👟';
+console.log(horseShoe.length);
+// -> 4
+console.log(horseShoe[0]);
+// -> (Invalid half-character)
+console.log(horseShoe.charCodeAt(0));
+// -> 55357 (code of the half-character
+console.log(horseShoe.codePointAt(0));
+// -> 128052 (actual code for horse emoji)
+
+//charCodeAt method gives a code unit, not the full code
+//codePointAt method (added later) gives a full Unicode character
+
+//! a for/of loop can be used on strings
+let roseDragon = '🌹🐉';
+for (let char of roseDragon) {
+  console.log(char);
+}
+// -> 🌹
+// -> 🐉
+
+//a function to count the characters that belong to each script
+//! findIndex method finds the position of the first element that matches a predicate.
+function countBy(items, groupName) {
+  let counts = [];
+  for (let item of items) {
+    let name = groupName(item);
+    let known = counts.findIndex(x => x.name == name);
+    if (known == -1) {
+      counts.push({name, count: 1});
+    } else {
+      counts[known].count++;
+    }
+  }
+  return counts;
+}
+
+console.log(countBy([1, 2, 3, 4, 5], n => n > 2));
+// -> [{name: false, count: 2}, {name: true, count: 3}]
+
+//using countBy, we can write a function that tells us which scripts are used
+function textScripts(text) {
+  let scripts = countBy(text, char => {
+    let script = characterScript(char.codePointAt(0));
+    return script ? script.name : 'none';
+  }).filter(({name}) => name != 'none');
+
+  let total = scripts.reduce((n, {count}) => n + count, 0);
+  if (total == 0) return 'No scripts found';
+
+  return scripts.map(({name, count}) => {
+    return `${Math.round(count * 100 / total)}% ${name}`;
+  }).join(', ');
+}
+console.log(textScripts('英国的狗说"woof", 俄罗斯的狗说"тяв"'));
+// -> 61% Han, 22% Latin, 17% Cyrillic
+
+// The function first counts the characters by name, using characterScript to assign them a name and falling back to the string "none" for characters that aren’t part of any script. The filter call drops the entry for "none" from the resulting array since we aren’t interested in those characters.
+
+// To be able to compute percentages, we first need the total number of characters that belong to a script, which we can compute with reduce. If no such characters are found, the function returns a specific string. Otherwise, it transforms the counting entries into readable strings with map and then combines them with join.
