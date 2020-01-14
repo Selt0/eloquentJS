@@ -270,3 +270,167 @@ let stringObject = {
 };
 console.log(stringObject[toStringSymbol]());
 // → a jute rope
+
+//Symbol.interator - a symbole value defined by the language, stored as a method of the Symbol function
+// for/loop method for objects
+
+//The method should return an object that provides an iterator
+//it has a next method that returns the next result. The result should be an object with a 'value' property that provides the next value (if there is one)
+//it has a done property which should be true if there are no more results, false otherwise
+
+//next, value, and done are plain strings. Only 'Symbol.iterator' is an actual symbol
+
+let okIterator = 'ok'[Symbol.iterator]();
+console.log(okIterator.next());
+// → {value: "o", done: false}
+console.log(okIterator.next());
+// → {value: "k", done: false}
+console.log(okIterator.next());
+// → {value: undefined, done: true}
+
+//iterable data structure
+//matrix class, acting as a two-dimensional array
+
+//the class stores its content in a single array of width x height elements. The elements are stored row by row
+class Matrix{ 
+  constructor(width, height, element = (x, y) => undefined) {
+    this.width = width;
+    this.height = height;
+    this.content = [];
+
+    for (let y = 0; y < height; y++) {
+      for(let x = 0; x < width; x++) {
+        this.content[y * width + x] = element(x, y);
+      }
+    }
+  }
+
+  get(x, y) {
+    return this.content[y * this.width + x];
+  }
+  set(x, y, value) {
+    this.content[y * this.width + x] = value;
+  }
+}
+
+//the class tracks the progress of iterating over a matrix in its x and y properties
+class MatrixIterator {
+  constructor(matrix) {
+    this.x = 0;
+    this.y = 0;
+    this.matrix = matrix;
+  }
+
+  next() {
+    if (this.y == this.matrix.height) return {done: true};
+
+    let value = {x: this.x,
+                 y: this.y,
+                 value: this.matrix.get(this.x, this.y)}; 
+    this.x++;
+    if (this.x == this.matrix.width) {
+      this.x = 0;
+      this.y++;
+    }
+    return {value, done: false}
+  }
+}
+
+//!  Throughout this book, I’ll occasionally use after-the-fact prototype manipulation to add methods to classes so that the individual pieces of code remain small and self-contained. In a regular program, where there is no need to split the code into small pieces, you’d declare these methods directly in the class instead.
+
+//make Matrix class iterable
+Matrix.prototype[Symbol.iterator] = function() {
+  return new MatrixIterator(this);
+};
+
+//we can now loop over a matrix
+let matrix = new Matrix(2, 2, (x, y) => `value ${x}, ${y}`);
+for (let {x, y, value} of matrix) {
+  console.log(x, y, value);
+}
+// → 0 0 value 0,0
+// → 1 0 value 1,0
+// → 0 1 value 0,1
+// → 1 1 value 1,1
+
+//Getters and Setters
+
+let varyingSize = {
+  get size() {
+    return Math.floor(Math.random() * 100);
+  }
+};
+
+console.log(varyingSize.size);
+// → 73
+console.log(varyingSize.size);
+// → 49
+
+
+class Temperature  {
+  constructor(celsius) {
+    this.celsius = celsius;
+  }
+  get fahrenheit() {
+    return this.celsius * 1.8 + 32;
+  }
+  set fahrenheit(value) {
+    this.celsius = (value - 32) / 1.8;
+  }
+
+  static fromFahrenheit(value) {
+    return new Temperature((value - 32) / 1.8);
+  }
+}
+
+let temp = new Temperature(22);
+console.log(temp.fahrenheit);
+// → 71.6
+temp.fahrenheit = 86;
+console.log(temp.celsius)
+// → 30
+
+
+//inside a class declaration, methods that have 'static' in front of the name are stored in the constructor
+//so the Temperature class allows you to write Temperature.fromFahrenheit(100) to create a temperature using degrees Fahrenheit.
+
+//inheritance
+//the new class inherits properties and behaviors from the old class
+
+class SymmetricMatrix extends Matrix {
+  constructor(size, element = (x, y) => undefined) {
+    super(size, size, (x, y) => {
+      if (x < y) return element(y, x);
+      else return element(x, y);
+    });
+  }
+
+  set(x, y, value) {
+    super.set(x, y, value);
+    if (x != y) {
+      super.set(y, x, value);
+    }
+  }
+}
+
+let matrix = new SymmetricMatrix(5, (x, y) => `${x}, ${y}`);
+console.log(matrix.get(2, 3));
+// → 3,2
+
+//! encapsulation and polymorphism can be used to separate pieces of code from each other.
+//! inheritane ties clases together. When inheriting, you usually have to know more about how it works than simply using it
+
+//! Inheritance can be a useful tool, and I use it now and then in my own programs, but it shouldn’t be the first tool you reach for, and you probably shouldn’t actively go looking for opportunities to construct class hierarchies (family trees of classes).
+
+
+//Summary: Objects have prototypes. They'll act as if they have properties they don't have as long as their prototype has that property.
+
+//Constructors, start with a capital letter, can be used with 'new' to create new objects. You can put shared properties in the prototype and specific properties in the new instance
+
+//You can define getters and setters to secretly call methods every time an object's property is accessed. Static methods are stored in a class's constructor, rather than its prototype
+
+//One useful thing to do with objects is to specify an interface for them and tell everybody that they are supposed to talk to your object only through that interface. The rest of the details that make up your object are now encapsulated, hidden behind the interface
+
+//More than one type may implement the same interface. Code written to use an interface automatically know how to work with any number of different objects that provide the interface. Aka polymorphism
+
+//When implementing multiple classes that differ in only some details, it can be helpful to write the new classes as sublcasses, inheriting part of its behavior
