@@ -38,6 +38,20 @@ hungryRabbit.speak('I could use a carrot right now.');
 speak.call(hungryRabbit, 'Burp!');
 // → The hungry rabbit says 'Burp!'
 
+//The call() allows for a function/method belonging to one object to be assigned and called for a different object.
+let map = {one: true, two: true, hasOwnProperty: true};
+console.log(map.hasOwnProperty("one"));
+// → TypeError: map.hasOwnProperty is not a function
+
+// Use another Object's hasOwnProperty
+// and call it with 'this' set to map
+console.log(({}).hasOwnProperty.call(map, 'one'));
+// → true
+
+//! You could even use the Object.prototype
+console.log(Object.prototype.hasOwnProperty.call(map, "one"));
+// → true
+
 //! Arrow functions do not bind their own this, instead they can see the 'this' binding of the scope around them
 function normalize() {
   console.log(this.coords.map(n => n / this.length));
